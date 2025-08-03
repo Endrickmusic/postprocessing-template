@@ -13,5 +13,6 @@ void main() {
     );
     
     // gl_FragColor = vec4(texel.rgb * tint, 1.0);
+    // gl_FragColor = vec4(tint, 1.0);
     gl_FragColor = texel;
 }`
