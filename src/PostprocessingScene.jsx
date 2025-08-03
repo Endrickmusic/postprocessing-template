@@ -39,7 +39,7 @@ export default function PostprocessingScene() {
       <OrbitControls />
 
       {/* Main scene with shader effect plane */}
-      <PostprocessingPlane renderTarget={renderTarget} />
+      <PostprocessingPlane renderTarget={renderTarget} sobelIntensity={1} />
 
       {/* Portal scene that will be rendered to FBO */}
       {createPortal(

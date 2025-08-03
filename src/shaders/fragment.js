@@ -1,18 +1,39 @@
 export const fragmentShader = `
 uniform sampler2D tDiffuse;
+uniform float sobelIntensity;
+uniform vec2 uTexelSize;
 varying vec2 vUv;
 
 void main() {
+    vec2 texelSize = uTexelSize;
+    float kernelX[9];
+    float kernelY[9];
+    kernelX[0] = -1.0; kernelX[1] = 0.0; kernelX[2] = 1.0;
+    kernelX[3] = -2.0; kernelX[4] = 0.0; kernelX[5] = 2.0;
+    kernelX[6] = -1.0; kernelX[7] = 0.0; kernelX[8] = 1.0;
+    kernelY[0] = -1.0; kernelY[1] = -2.0; kernelY[2] = -1.0;
+    kernelY[3] =  0.0; kernelY[4] =  0.0; kernelY[5] =  0.0;
+    kernelY[6] =  1.0; kernelY[7] =  2.0; kernelY[8] =  1.0;
+
+    vec3 colorSample[9];
+    int i = 0;
+    for(int y = -1; y <= 1; y++) {
+        for(int x = -1; x <= 1; x++) {
+            colorSample[i++] = texture2D(tDiffuse, vUv + vec2(x, y) * texelSize).rgb;
+        }
+    }
+    float gx = 0.0;
+    float gy = 0.0;
+    for(int j = 0; j < 9; j++) {
+        float gray = dot(colorSample[j], vec3(0.299, 0.587, 0.114));
+        gx += kernelX[j] * gray;
+        gy += kernelY[j] * gray;
+    }
+    float edge = length(vec2(gx, gy));
+    edge = clamp(edge, 0.0, 1.0);
+
     vec4 texel = texture2D(tDiffuse, vUv);
-    
-    // Create a rainbow tint based on UV coordinates
-    vec3 tint = vec3(
-        0.5 + 0.5 * sin(vUv.x * 3.14159),
-        0.5 + 0.5 * sin(vUv.y * 3.14159),
-        0.5 + 0.5 * cos((vUv.x + vUv.y) * 3.14159)
-    );
-    
-    // gl_FragColor = vec4(texel.rgb * tint, 1.0);
-    // gl_FragColor = vec4(tint, 1.0);
-    gl_FragColor = texel;
+    vec3 sobelColor = vec3(edge);
+    vec3 finalColor = mix(texel.rgb, sobelColor, sobelIntensity);
+    gl_FragColor = vec4(finalColor, 1.0);
 }`
