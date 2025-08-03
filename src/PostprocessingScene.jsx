@@ -4,6 +4,7 @@ import { useRef } from "react"
 import * as THREE from "three"
 import Portal from "./Portal"
 import PostprocessingPlane from "./PostprocessingPlane"
+import { useControls } from "leva"
 
 export default function PostprocessingScene() {
   const boxRef = useRef()
@@ -14,6 +15,16 @@ export default function PostprocessingScene() {
     multisample: true,
     stencilBuffer: false,
     samples: 8,
+  })
+
+  const { sobelIntensity } = useControls({
+    sobelIntensity: {
+      value: 1.0,
+      min: 0,
+      max: 1,
+      step: 0.01,
+      label: "Sobel Intensity",
+    },
   })
 
   // Rotate the box in the portal scene
@@ -39,7 +50,10 @@ export default function PostprocessingScene() {
       <OrbitControls />
 
       {/* Main scene with shader effect plane */}
-      <PostprocessingPlane renderTarget={renderTarget} sobelIntensity={1} />
+      <PostprocessingPlane
+        renderTarget={renderTarget}
+        sobelIntensity={sobelIntensity}
+      />
 
       {/* Portal scene that will be rendered to FBO */}
       {createPortal(

@@ -17,7 +17,7 @@ extend({ PostprocessingMaterial })
 
 export default function PostprocessingPlane({ renderTarget, sobelIntensity }) {
   const { viewport } = useThree()
-  const texelSize = [1 / renderTarget.width, 1 / renderTarget.height]
+  const texelSize = [1 / viewport.width, 1 / viewport.height]
   return (
     <mesh position={[0, 0, 0]} scale={[viewport.width, viewport.height, 1]}>
       <planeGeometry />
