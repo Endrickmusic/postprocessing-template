@@ -1,7 +1,7 @@
 export const fragmentShader = `
 uniform sampler2D tDiffuse;
-uniform float sobelIntensity;
 uniform vec2 uTexelSize;
+uniform float threshold;
 varying vec2 vUv;
 
 void main() {
@@ -30,10 +30,9 @@ void main() {
         gy += kernelY[j] * gray;
     }
     float edge = length(vec2(gx, gy));
-    edge = clamp(edge, 0.0, 1.0);
+    edge = smoothstep(threshold, threshold + 0.1, edge);
 
     vec4 texel = texture2D(tDiffuse, vUv);
     vec3 sobelColor = vec3(edge);
-    vec3 finalColor = mix(texel.rgb, sobelColor, sobelIntensity);
-    gl_FragColor = vec4(finalColor, 1.0);
+    gl_FragColor = vec4(sobelColor, 1.0);
 }`

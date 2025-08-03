@@ -6,8 +6,8 @@ import { fragmentShader } from "./shaders/fragment.js"
 const PostprocessingMaterial = shaderMaterial(
   {
     tDiffuse: null,
-    sobelIntensity: 0.0,
     uTexelSize: [1, 1],
+    threshold: 0.2,
   },
   vertexShader,
   fragmentShader
@@ -15,7 +15,7 @@ const PostprocessingMaterial = shaderMaterial(
 
 extend({ PostprocessingMaterial })
 
-export default function PostprocessingPlane({ renderTarget, sobelIntensity }) {
+export default function PostprocessingPlane({ renderTarget, threshold }) {
   const { viewport } = useThree()
   const texelSize = [1 / renderTarget.width, 1 / renderTarget.height]
   return (
@@ -23,8 +23,8 @@ export default function PostprocessingPlane({ renderTarget, sobelIntensity }) {
       <planeGeometry />
       <postprocessingMaterial
         tDiffuse={renderTarget.texture}
-        sobelIntensity={sobelIntensity}
         uTexelSize={texelSize}
+        threshold={threshold}
         transparent
       />
     </mesh>

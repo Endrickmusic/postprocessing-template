@@ -15,9 +15,9 @@ export default function Portal() {
       >
         <boxGeometry args={[0.5, 0.5, 0.5]} />
         <meshStandardMaterial
-          metalness={1}
+          metalness={0}
           roughness={0.12}
-          normalMap={normalMap}
+          // normalMap={normalMap}
           normalScale={[0.2, 0.2]}
         />
       </mesh>
