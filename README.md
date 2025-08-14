@@ -1,3 +1,3 @@
-# React + Vite + R3F
+# Postprocessing Template
 
-This template provides a minimal setup to get R3F working in Vite
+This template provides a minimal setup for postprocessing with R3F
